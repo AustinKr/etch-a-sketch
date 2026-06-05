@@ -37,9 +37,9 @@ function applyBrightnessEffect(cell, direction)
     
     const rgb = 
     {
-        r : parseInt(rgbValues[0]) * factor,
-        g : parseInt(rgbValues[1]) * factor,
-        b : parseInt(rgbValues[2]) * factor
+        r : (parseInt(rgbValues[0]) + change) * factor,
+        g : (parseInt(rgbValues[1]) + change) * factor,
+        b : (parseInt(rgbValues[2]) + change) * factor
     };
 
     cell.style.backgroundColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
