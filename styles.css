@@ -1,3 +1,21 @@
-* {
-    color:red
+.container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+
+}
+
+.side-panel {
+    background-color: grey;
+    width: 200px;
+    height: 800px;
+
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+.main-panel {
+    background-color: lightgrey;
+    width: 800px;
+    height: 800px;
 }
