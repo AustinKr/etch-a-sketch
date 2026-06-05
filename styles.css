@@ -4,6 +4,10 @@
     justify-content: center;
 
 }
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+}
 
 .side-panel {
     background-color: grey;
