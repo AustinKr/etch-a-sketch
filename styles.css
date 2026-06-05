@@ -1,8 +1,10 @@
+body{
+    background-size: cover;
+}
 .container {
     display: flex;
     gap: 10px;
     justify-content: center;
-
 }
 
 .side-panel {
