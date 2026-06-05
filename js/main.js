@@ -2,8 +2,11 @@
 let gridSize = 16;
 let isMouseDown = false;
 let cellTarget = null;
+let paintColor = "yellow";
+let borderColor = "red";
+let borderWidth = "2px";
 
-function tryApplyEffect(container, event)
+function tryToggleEffect(container, event)
 {
     if(!isMouseDown)
         return;
@@ -14,7 +17,15 @@ function tryApplyEffect(container, event)
     if(cellTarget !== null && newCellTarget === cellTarget)
         return;
     cellTarget = newCellTarget;
-    cellTarget.classList.toggle("hover-effect");
+
+    if(cellTarget.classList.contains("colored-effect"))
+    {
+        cellTarget.style.removeProperty("background-color");
+        cellTarget.classList.remove("colored-effect");
+        return;
+    }
+    cellTarget.style.backgroundColor = paintColor;
+    cellTarget.classList.add("colored-effect");
 }
 function setActiveState(element, state)
 {
@@ -28,19 +39,9 @@ function setActiveState(element, state)
     element.style.display = 'block';
 }
 
-function main()
+function replaceGrid(container)
 {
-    let sidePanel = document.querySelector(".side-panel");
-    let topPanel = document.querySelector(".top-panel");
-    let collapseButton = document.querySelector(".collapse-button");
-    collapseButton.addEventListener("click",
-        () => {
-        sidePanel.classList.toggle("collapesed");
-        let isCollapsed = collapseButton.classList.toggle("collapesed-button");
-        setActiveState(topPanel, isCollapsed);
-    });
-
-    let container = document.querySelector(".main-panel");
+    container.replaceChildren();
     let cellSize = container.offsetWidth / gridSize;
     for(let j = 0; j < gridSize; j++)
     {
@@ -53,21 +54,53 @@ function main()
         {
             let cell = document.createElement("div");
             cell.classList.add("grid-cell")
+            cell.style.borderColor = borderColor;
+            cell.style.borderWidth = borderWidth;
             row.appendChild(cell);
         }
         container.appendChild(row);
     }
-
-    container.addEventListener("mousedown", (event) => {
-        if(!event.target.classList.contains("grid-cell"))
-            return;
-        isMouseDown = true;
-        tryApplyEffect(container, event);
-    });
-    container.addEventListener("mouseup", () => {
-        isMouseDown = false;
-        cellTarget = null;
-    });
-    container.addEventListener("mousemove", event => tryApplyEffect(container, event));
 }
-main();
+
+let container = document.querySelector(".main-panel");
+let gridSizeInput = document.getElementById("grid-size");
+let paintColorInput = document.getElementById("paint-color");
+let borderColorInput = document.getElementById("border-color");
+let borderWidthInput = document.getElementById("border-width");
+gridSizeInput.addEventListener("input", event => {
+    gridSize = parseInt(event.target.value);
+    replaceGrid(container);
+});
+paintColorInput.addEventListener("input", event => paintColor = event.target.value);
+borderColorInput.addEventListener("input", event => {
+    borderColor = event.target.value;
+    replaceGrid(container);
+});
+borderWidthInput.addEventListener("input", event => {
+    borderWidth = parseInt(event.target.value);
+    replaceGrid(container);
+});
+
+let sidePanel = document.querySelector(".side-panel");
+let topPanel = document.querySelector(".top-panel");
+let collapseButton = document.querySelector(".collapse-button");
+collapseButton.addEventListener("click",
+    () => {
+   sidePanel.classList.toggle("collapesed");
+   let isCollapsed = collapseButton.classList.toggle("collapesed-button");
+   setActiveState(topPanel, isCollapsed);
+});
+
+container.addEventListener("mousedown", (event) => {
+    if(!event.target.classList.contains("grid-cell"))
+        return;
+    isMouseDown = true;
+    tryToggleEffect(container, event);
+});
+container.addEventListener("mouseup", () => {
+    isMouseDown = false;
+    cellTarget = null;
+});
+container.addEventListener("mousemove", event => tryToggleEffect(container, event));
+
+replaceGrid(container);

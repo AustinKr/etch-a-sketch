@@ -14,6 +14,11 @@
     flex-direction: column-reverse;
     justify-content: space-between;
 }
+.top-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 .main-panel {
     background-color: lightgrey;
     width: 800px;
@@ -23,7 +28,7 @@
 .grid-cell {
     background-color: grey;
     flex: 1 0 auto;
-    border: 2px solid red;
+    border-style: solid;
 }
 
 .collapse-button-container {
@@ -40,7 +45,4 @@
 
 .collapesed {
     width: 75px;
-}
-.hover-effect {
-    background-color: yellow;
 }
