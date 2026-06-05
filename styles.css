@@ -20,11 +20,6 @@
     height: 800px;
 }
 
-.grid-container {
-    width: 100%;
-    height: 100%;
-}
-
 .collapse-button {
     transform: rotate(90deg);
 }

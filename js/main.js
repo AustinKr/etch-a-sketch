@@ -11,7 +11,7 @@ function main()
         collapseButton.classList.toggle("collapesed-button");
     });
 
-    let container = document.querySelector(".grid-container");
+    let container = document.querySelector(".main-panel");
     let cellSize = container.offsetWidth / gridSize;
     for(let j = 0; j < gridSize; j++)
     {
