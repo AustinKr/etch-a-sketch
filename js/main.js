@@ -16,17 +16,28 @@ function tryApplyEffect(container, event)
     cellTarget = newCellTarget;
     cellTarget.classList.toggle("hover-effect");
 }
-
+function setActiveState(element, state)
+{
+    if(state)
+    {
+        element.style.pointerEvents = 'none';
+        element.style.display = 'none';
+        return;
+    }
+    element.style.pointerEvents = 'auto';
+    element.style.display = 'block';
+}
 
 function main()
 {
-    // TODO: Delegate events to one single listener
-    
+    let sidePanel = document.querySelector(".side-panel");
+    let topPanel = document.querySelector(".top-panel");
     let collapseButton = document.querySelector(".collapse-button");
     collapseButton.addEventListener("click",
         () => {
-        collapseButton.parentElement.classList.toggle("collapesed");
-        collapseButton.classList.toggle("collapesed-button");
+        sidePanel.classList.toggle("collapesed");
+        let isCollapsed = collapseButton.classList.toggle("collapesed-button");
+        setActiveState(topPanel, isCollapsed);
     });
 
     let container = document.querySelector(".main-panel");

@@ -11,8 +11,8 @@
     height: 800px;
 
     display: flex;
-    justify-content: end;
-    align-items: end;
+    flex-direction: column-reverse;
+    justify-content: space-between;
 }
 .main-panel {
     background-color: lightgrey;
@@ -26,6 +26,11 @@
     border: 2px solid red;
 }
 
+.collapse-button-container {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
 .collapse-button {
     transform: rotate(90deg);
 }
