@@ -1,9 +1,4 @@
 
-function toggleCollapseParent(element)
-{
-    element.parentElement.classList.toggle("collapesed");
-}
-
 let gridSize = 16;
 
 function main()
@@ -11,8 +6,9 @@ function main()
     // TODO: Delegate events to one single listener
     
     let collapseButton = document.querySelector(".collapse-button");
-    collapseButton.addEventListener("click", event => {
-        toggleCollapseParent(event.target);
+    collapseButton.addEventListener("click", () => {
+        collapseButton.parentElement.classList.toggle("collapesed");
+        collapseButton.classList.toggle("collapesed-button");
     });
 
     let container = document.querySelector(".grid-container");

@@ -23,7 +23,12 @@
     width: 800px;
     height: 800px;
 }
-
+.collapse-button {
+    transform: rotate(90deg);
+}
+.collapesed-button {
+    transform: rotate(270deg);
+}
 .collapesed
 {
     width: 75px;
