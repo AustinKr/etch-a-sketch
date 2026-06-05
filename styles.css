@@ -4,10 +4,6 @@
     justify-content: center;
 
 }
-.grid-container {
-    display: flex;
-    flex-wrap: wrap;
-}
 
 .side-panel {
     background-color: grey;
@@ -23,6 +19,12 @@
     width: 800px;
     height: 800px;
 }
+
+.grid-container {
+    width: 100%;
+    height: 100%;
+}
+
 .collapse-button {
     transform: rotate(90deg);
 }

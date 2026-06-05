@@ -13,15 +13,23 @@ function main()
 
     let container = document.querySelector(".grid-container");
     let cellSize = container.offsetWidth / gridSize;
-    for(let i = 0; i < gridSize*gridSize; i++)
+    for(let j = 0; j < gridSize; j++)
     {
-        let cell = document.createElement("div");
-        cell.style.backgroundColor = "grey";
-        cell.style.width = cellSize;
-        cell.style.height = cellSize;
-        cell.style.flex = "0 0 auto";
-        cell.textContent = "duh..";
-        container.appendChild(cell);
+        let row = document.createElement("div");
+        row.style.width = "100%";
+        row.style.height = `${cellSize}px`;
+        row.style.display = "flex";
+
+        for(let i = 0; i < gridSize; i++)
+        {
+            let cell = document.createElement("div");
+            cell.style.backgroundColor = "grey";
+            cell.style.flex = "1 0 auto";
+            cell.style.border = "2px solid red";
+            cell.textContent = "duh..";
+            row.appendChild(cell);
+        }
+        container.appendChild(row);
     }
 }
 main();
