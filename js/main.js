@@ -1,32 +1,67 @@
+const BRIGHTNESS_POWER = 10; // percentage
 
 let gridSize = 16;
-let isMouseDown = false;
 let cellTarget = null;
+let isMouseDown = false;
+
 let paintColor = "yellow";
 let borderColor = "red";
 let borderWidth = "2px";
+let brightnessMode = null;
 
-function tryToggleEffect(container, event)
+function getCurrentCell(container, event)
 {
-    if(!isMouseDown)
-        return;
     let rect = container.getBoundingClientRect();
     let column = Math.floor((event.clientX - rect.left) / container.clientWidth * gridSize);
     let row = Math.floor((event.clientY - rect.top) / container.clientHeight * gridSize);
-    let newCellTarget = container.children[row].children[column];
+    return container.children[row].children[column];
+}
+function applyPaintEffect(cell)
+{
+    if(cell.classList.contains("colored-effect"))
+    {
+        cell.style.removeProperty("background-color");
+        cell.classList.remove("colored-effect");
+        return;
+    }
+    cell.style.backgroundColor = paintColor;
+    cell.classList.add("colored-effect");
+}
+function applyBrightnessEffect(cell, direction)
+{
+    const change = direction * BRIGHTNESS_POWER;
+    const factor = (100 + change) / 100.0;
+
+    const colorString = window.getComputedStyle(cell).backgroundColor;
+    const rgbValues = colorString.match(/[\d.]+/g);
+    
+    const rgb = 
+    {
+        r : parseInt(rgbValues[0]) * factor,
+        g : parseInt(rgbValues[1]) * factor,
+        b : parseInt(rgbValues[2]) * factor
+    };
+
+    cell.style.backgroundColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+}
+function tryApplyEffects(container, event)
+{
+    if(!isMouseDown)
+        return;
+    
+    let newCellTarget = getCurrentCell(container, event);
     if(cellTarget !== null && newCellTarget === cellTarget)
         return;
     cellTarget = newCellTarget;
 
-    if(cellTarget.classList.contains("colored-effect"))
+    if(brightnessMode === null)
     {
-        cellTarget.style.removeProperty("background-color");
-        cellTarget.classList.remove("colored-effect");
+        applyPaintEffect(cellTarget);
         return;
     }
-    cellTarget.style.backgroundColor = paintColor;
-    cellTarget.classList.add("colored-effect");
+    applyBrightnessEffect(cellTarget, brightnessMode);
 }
+
 function setActiveState(element, state)
 {
     if(state)
@@ -62,24 +97,55 @@ function replaceGrid(container)
     }
 }
 
+function settupInputFields(container)
+{
+    document.getElementById("grid-size")
+     .addEventListener("input", event => {
+        gridSize = parseInt(event.target.value);
+        replaceGrid(container);
+    });
+
+    document.getElementById("paint-color")
+     .addEventListener("input", event => paintColor = event.target.value);
+    document.getElementById("border-color")
+     .addEventListener("input", event => {
+        borderColor = event.target.value;
+        replaceGrid(container);
+    });
+    document.getElementById("border-width")
+     .addEventListener("input", event => {
+        borderWidth = parseInt(event.target.value);
+        replaceGrid(container);
+    });
+    
+    const darkenInput = document.getElementById("darken-mode");
+    const lightenInput = document.getElementById("lighten-mode");
+    lightenInput.addEventListener("input", event => {
+        let newValue = event.target.checked;
+        if(!newValue)
+        {
+            brightnessMode = null;
+            return;
+        }
+        brightnessMode = 1;
+        darkenInput.checked = !newValue;
+    });
+    darkenInput.addEventListener("input", event => {
+        let newValue = event.target.checked;
+        if(!newValue)
+        {
+            brightnessMode = null;
+            return;
+        }
+        brightnessMode = -1;
+        lightenInput.checked = !newValue;
+    });
+}
+
+
 let container = document.querySelector(".main-panel");
-let gridSizeInput = document.getElementById("grid-size");
-let paintColorInput = document.getElementById("paint-color");
-let borderColorInput = document.getElementById("border-color");
-let borderWidthInput = document.getElementById("border-width");
-gridSizeInput.addEventListener("input", event => {
-    gridSize = parseInt(event.target.value);
-    replaceGrid(container);
-});
-paintColorInput.addEventListener("input", event => paintColor = event.target.value);
-borderColorInput.addEventListener("input", event => {
-    borderColor = event.target.value;
-    replaceGrid(container);
-});
-borderWidthInput.addEventListener("input", event => {
-    borderWidth = parseInt(event.target.value);
-    replaceGrid(container);
-});
+settupInputFields(container);
+replaceGrid(container);
 
 let sidePanel = document.querySelector(".side-panel");
 let topPanel = document.querySelector(".top-panel");
@@ -95,12 +161,10 @@ container.addEventListener("mousedown", (event) => {
     if(!event.target.classList.contains("grid-cell"))
         return;
     isMouseDown = true;
-    tryToggleEffect(container, event);
+    tryApplyEffects(container, event);
 });
 container.addEventListener("mouseup", () => {
-    isMouseDown = false;
     cellTarget = null;
+    isMouseDown = false;
 });
-container.addEventListener("mousemove", event => tryToggleEffect(container, event));
-
-replaceGrid(container);
+container.addEventListener("mousemove", event => tryApplyEffects(container, event));
